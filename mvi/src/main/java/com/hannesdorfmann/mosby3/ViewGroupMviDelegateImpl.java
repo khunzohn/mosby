@@ -53,7 +53,7 @@ public class ViewGroupMviDelegateImpl<V extends MvpView, P extends MviPresenter<
 
   private boolean checkedActivityFinishing = false;
   private boolean presenterDetached = false;
-  private boolean presenterDestroeyed = false;
+  private boolean presenterDestroyed = false;
 
   public ViewGroupMviDelegateImpl(@NonNull View view,
       @NonNull ViewGroupMviDelegateCallback<V, P> delegateCallback,
@@ -255,9 +255,11 @@ public class ViewGroupMviDelegateImpl<V extends MvpView, P extends MviPresenter<
   }
 
   private void destroyPresenterIfnotDoneYet() {
-    if (!presenterDestroeyed) {
-      presenter.destroy();
-      presenterDestroeyed = true;
+    if (!presenterDestroyed) {
+      if (presenter != null) {
+        presenter.destroy();
+      }
+      presenterDestroyed = true;
       if (DEBUG) {
         Log.d(DEBUG_TAG, "Presenter destroyed: " + presenter);
       }
@@ -272,7 +274,9 @@ public class ViewGroupMviDelegateImpl<V extends MvpView, P extends MviPresenter<
 
   private void detachPresenterIfNotDoneYet() {
     if (!presenterDetached) {
-      presenter.detachView();
+      if (presenter != null) {
+        presenter.detachView();
+      }
       presenterDetached = true;
       if (DEBUG) {
         Log.d(DEBUG_TAG,
